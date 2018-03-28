@@ -1,0 +1,102 @@
+//Create by Caijie.Senior student of BJTU
+
+1004. 成绩排名 (20)
+
+时间限制
+400 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+读入n名学生的姓名、学号、成绩，分别输出成绩最高和成绩最低学生的姓名和学号。
+
+输入格式：每个测试输入包含1个测试用例，格式为
+
+  第1行：正整数n
+  第2行：第1个学生的姓名 学号 成绩
+  第3行：第2个学生的姓名 学号 成绩
+  ... ... ...
+  第n+1行：第n个学生的姓名 学号 成绩
+其中姓名和学号均为不超过10个字符的字符串，成绩为0到100之间的一个整数，这里保证在一组测试用例中没有两个学生的成绩是相同的。
+输出格式：对每个测试用例输出2行，第1行是成绩最高学生的姓名和学号，第2行是成绩最低学生的姓名和学号，字符串间有1空格。
+
+输入样例：
+3
+Joe Math990112 89
+Mike CS991301 100
+Mary EE990830 95
+输出样例：
+Mike CS991301
+Joe Math990112
+
+import java.util.*;
+import java.lang.*;
+
+class Person implements Comparator,Comparable{
+    private String name;
+    private String cno;
+    private int grade;
+
+    public Person(String name, String cno, int grade) {
+        this.name = name;
+        this.cno = cno;
+        this.grade = grade;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCno() {
+        return cno;
+    }
+
+    public void setCno(String cno) {
+        this.cno = cno;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        Person p1 = (Person)o1;
+        Person p2 = (Person)o2;
+        return p1.grade - p2.grade;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Person p = (Person)o;
+        int temp = p.grade - this.grade;
+        return temp==0?this.name.compareTo(p.name):temp;
+    }
+}
+public class Main{
+    static int num;
+    public static void main(String[] args){
+        TreeSet<Person> list = new TreeSet<>();
+        Scanner s = new Scanner(System.in);
+        num = Integer.parseInt(s.nextLine());
+        for(int i = 0 ;i < num;i++){
+            String[] line = s.nextLine().split(" ");
+            Person p = new Person(line[0],line[1],Integer.parseInt(line[2]));
+            list.add(p);
+        }
+        System.out.println(list.first().getName()+" "+list.first().getCno());
+        System.out.println(list.last().getName()+" "+list.last().getCno());
+    }
+}

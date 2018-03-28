@@ -1,0 +1,119 @@
+//Create by Caijie.Senior student of BJTU
+1018. 锤子剪刀布 (18/20)有一个例子超时
+
+时间限制
+100 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+大家应该都会玩“锤子剪刀布”的游戏：两人同时给出手势，胜负规则：现给出两人的交锋记录，请统计双方的胜、平、负次数，并且给出双方分别出什么手势的胜算最大。
+
+输入格式：
+
+输入第1行给出正整数N（<=105），即双方交锋的次数。随后N行，每行给出一次交锋的信息，即甲、乙双方同时给出的的手势。C代表“锤子”、J代表“剪刀”、B代表“布”，第1个字母代表甲方，第2个代表乙方，中间有1个空格。
+
+输出格式：
+
+输出第1、2行分别给出甲、乙的胜、平、负次数，数字间以1个空格分隔。第3行给出两个字母，分别代表甲、乙获胜次数最多的手势，中间有1个空格。如果解不唯一，则输出按字母序最小的解。
+
+输入样例：
+10
+C J
+J B
+C B
+B B
+B C
+C C
+C B
+J B
+B C
+J J
+输出样例：
+5 3 2
+2 3 5
+B B
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.*;
+import java.util.*;
+class Gesture{
+    public int num;
+    public String g_name;
+    public String p_name;
+
+    public Gesture(int num, String g_name, String p_name) {
+        this.num = num;
+        this.g_name = g_name;
+        this.p_name = p_name;
+    }
+}
+public class Main {
+    static int winA;
+    static int equalA;
+    static int loseA;
+    static int winB;
+    static int equalB;
+    static int loseB;
+    static Gesture gestureAC = new Gesture(0,"C","A");
+    static Gesture gestureAJ = new Gesture(0,"J","A");
+    static Gesture gestureAB = new Gesture(0,"B","A");
+    static Gesture gestureBC = new Gesture(0,"C","B");
+    static Gesture gestureBJ = new Gesture(0,"J","B");
+    static Gesture gestureBB = new Gesture(0,"B","B");
+    public static void judge(String[] s) {
+        if (s[0].equals("C") && s[1].equals("J")) {
+            winA++;
+            gestureAC.num++;
+            loseB++;
+        } else if (s[0].equals(s[1])) {
+            equalA++;
+            equalB++;
+        } else if (s[0].equals("J") && s[1].equals("B")) {
+            winA++;
+            gestureAJ.num++;
+            loseB++;
+        } else if (s[0].equals("B") && s[1].equals("C")) {
+            winA++;
+            gestureAB.num++;
+            loseB++;
+        } else if (s[1].equals("C") && s[0].equals("J")) {
+            winB++;
+            gestureBC.num++;
+            loseA++;
+        } else if (s[1].equals("J") && s[0].equals("B")) {
+            winB++;
+            gestureBJ.num++;
+            loseA++;
+        } else {
+            winB++;
+            gestureBB.num++;
+            loseA++;
+        }
+    }
+    public static Gesture max(Gesture a,Gesture b,Gesture c){
+        Gesture mid = a.num>=b.num?a:b;
+        return mid.num>=c.num?mid:c;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String s = bufferedReader.readLine();
+        int num = Integer.parseInt(s);
+        for (int i = 0; i < num; i++) {
+            String exp = bufferedReader.readLine();
+            String[] result = exp.split(" ");
+            judge(result);
+        }
+        System.out.println(winA+" "+equalA+" "+loseA);
+        System.out.println(winB+" "+equalB+" "+loseB);
+        System.out.print(max(gestureAB,gestureAC,gestureAJ).g_name+ " ");
+        System.out.print(max(gestureBB,gestureBC,gestureBJ).g_name);
+    }
+}

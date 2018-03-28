@@ -1,0 +1,54 @@
+//Create by Caijie.Senior student of BJTU
+1022. D进制的A+B (20)
+
+时间限制
+100 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+输入两个非负10进制整数A和B(<=230-1)，输出A+B的D (1 < D <= 10)进制数。
+
+输入格式：
+
+输入在一行中依次给出3个整数A、B和D。
+
+输出格式：
+
+输出A+B的D进制数。
+
+输入样例：
+123 456 8
+输出样例：
+1103
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.lang.*;
+public class Main{
+    public static String transfer(long num1,long num2,long decimal){
+        long sum = num1+num2;
+        StringBuilder stringBuilder = new StringBuilder("");
+        while(sum / decimal != 0){
+            stringBuilder.append(sum%decimal);
+            sum = sum/decimal;
+        }
+        stringBuilder.append(sum%decimal);
+        return stringBuilder.reverse().toString();
+    }
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line = bufferedReader.readLine();
+        String[] nums = line.split(" ");
+        long num1 = Long.parseLong(nums[0]);
+        long num2 = Long.parseLong(nums[1]);
+        long decimal = Long.parseLong(nums[2]);
+        System.out.print(transfer(num1,num2,decimal));
+    }
+}
