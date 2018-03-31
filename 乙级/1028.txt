@@ -1,0 +1,130 @@
+//Create by Caijie.Senior student of BJTU
+1028. 人口普查(16/20)尝试了两种方法还是超时 可能java真的太慢了 等之后再用c或者c++写一遍吧
+
+时间限制
+200 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+某城镇进行人口普查，得到了全体居民的生日。现请你写个程序，找出镇上最年长和最年轻的人。
+
+这里确保每个输入的日期都是合法的，但不一定是合理的——假设已知镇上没有超过200岁的老人，而今天是2014年9月6日，所以超过200岁的生日和未出生的生日都是不合理的，应该被过滤掉。
+
+输入格式：
+
+输入在第一行给出正整数N，取值在(0, 105]；随后N行，每行给出1个人的姓名（由不超过5个英文字母组成的字符串）、以及按“yyyy/mm/dd”（即年/月/日）格式给出的生日。题目保证最年长和最年轻的人没有并列。
+
+输出格式：
+
+在一行中顺序输出有效生日的个数、最年长人和最年轻人的姓名，其间以空格分隔。
+
+输入样例：
+5
+John 2001/05/12
+Tom 1814/09/06
+Ann 2121/01/30
+James 1814/09/05
+Steve 1967/11/20
+输出样例：
+3 Tom John
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.lang.*;
+
+class Person implements Comparable {
+    public String name;
+    public int year;
+    public int month;
+    public int day;
+
+    public Person(String name, int year, int month, int day) {
+        this.name = name;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Person p = (Person) o;
+        if (p.year == this.year) {
+            if (p.month == this.month)
+                return p.day - this.day;
+            else
+                return p.month - this.month;
+        } else
+            return p.year - this.year;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        TreeSet<Person> sets = new TreeSet<>();
+        int num = Integer.parseInt(bufferedReader.readLine());
+        for (int i = 0; i < num; i++) {
+            String line = bufferedReader.readLine();
+            String[] info = line.split(" |/");
+            sets.add(new Person(info[0], Integer.parseInt(info[1]), Integer.parseInt(info[2]), Integer.parseInt(info[3])));
+        }
+        Iterator<Person> iterator = sets.iterator();
+        //Iterator<Person> iterator1 = sets.descendingIterator();
+        int count = 0;
+        String firstname = "";
+        while (iterator.hasNext()) {
+            Person p = iterator.next();
+            if(p.year>2014 || (p.year==2014&&p.month>9) || (p.year==2014&&p.month==9&&p.day>6))
+                continue;
+            else if(p.year<1814 || (p.year==1814&&p.month<9) || (p.year==1814&&p.month==9&&p.day<6))
+                break;
+            else {
+                if (count==0)
+                    firstname = p.name;
+                count++;
+            }
+        }
+
+        if(count == 0) {
+            System.out.print(0);
+            return;
+        } else
+            System.out.print(count+" ");
+        Iterator<Person> iterator1 = sets.iterator();
+        boolean flag = false;
+        while (iterator1.hasNext()){
+            Person p = iterator1.next();
+            if(p.name.equals(firstname)) {
+                flag = true;
+                count--;
+            }
+            if (count==0 && flag==true) {
+                System.out.print(p.name + " " + firstname);
+                break;
+            }
+            else if(count!=0 && flag == true)
+                count--;
+        }
+//        while (iterator1.hasNext()) {
+//            Person p = iterator1.next();
+//            if(p.year<1814 || (p.year==1814&&p.month<9) || (p.year==1814&&p.month==9&&p.day<6))
+//                continue;
+//            else {
+//                if(count==0){
+//                    System.out.print(0);
+//                    break;
+//                }
+//                System.out.print(count+" "+p.name+" "+firstname);
+//                break;
+//            }
+//        }
+
+    }
+}
