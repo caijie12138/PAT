@@ -1,0 +1,141 @@
+1033. 旧键盘打字(20)
+
+时间限制
+200 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+旧键盘上坏了几个键，于是在敲一段文字的时候，对应的字符就不会出现。现在给出应该输入的一段文字、以及坏掉的那些键，打出的结果文字会是怎样？
+
+输入格式：
+
+输入在2行中分别给出坏掉的那些键、以及应该输入的文字。其中对应英文字母的坏键以大写给出；每段文字是不超过105个字符的串。可用的字符包括字母[a-z, A-Z]、数字0-9、以及下划线“_”（代表空格）、“,”、“.”、“-”、“+”（代表上档键）。题目保证第2行输入的文字串非空。
+
+注意：如果上档键坏掉了，那么大写的英文字母无法被打出。
+
+输出格式：
+
+在一行中输出能够被打出的结果文字。如果没有一个字符能被打出，则输出空行。
+
+输入样例：
+7+IE.
+7_This_is_a_test.
+输出样例：
+_hs_s_a_tst
+
+import java.lang.*;
+import java.io.*;
+
+public class Main {
+    static boolean[] flags = new boolean[41];
+    static boolean flag = false;
+
+    public static void judge(String output) {
+        for (int i = 0; i < output.length(); i++) {
+            if (output.charAt(i) >= 48 && output.charAt(i) <= 57 && flags[output.charAt(i) - 48] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) >= 65 && output.charAt(i) <= 90 && flags[output.charAt(i) - 55] == false && !flag)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) >= 97 && output.charAt(i) <= 122 && flags[output.charAt(i) - 87] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) == 95 && flags[36] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) == 44 && flags[37] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) == 46 && flags[38] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) == 45 && flags[39] == false)
+                System.out.print(output.charAt(i));
+            else if (output.charAt(i) == 43 && flags[40] == false)
+                System.out.print(output.charAt(i));
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String bad = bufferedReader.readLine();
+        String output = bufferedReader.readLine();
+        for (int i = 0; i < bad.length(); i++) {
+            if (bad.charAt(i) >= 48 && bad.charAt(i) <= 57)
+                flags[bad.charAt(i) - 48] = true;
+            else if (bad.charAt(i) >= 65 && bad.charAt(i) <= 90)
+                flags[bad.charAt(i) - 55] = true;
+            else if (bad.charAt(i) >= 97 && bad.charAt(i) <= 122)
+                flags[bad.charAt(i) - 87] = true;
+            else if (bad.charAt(i) == 95)
+                flags[36] = true;
+            else if (bad.charAt(i) == 44)
+                flags[37] = true;
+            else if (bad.charAt(i) == 46)
+                flags[38] = true;
+            else if (bad.charAt(i) == 45)
+                flags[39] = true;
+            else if (bad.charAt(i) == 43) {
+                flag = true;
+                flags[40] = true;
+            }
+        }
+        judge(output);
+
+    }
+}
+最后一个又。。超时。。。
+#include <iostream>
+using namespace std;
+static bool flags[41];
+static bool flag = false;
+void judge(string output){
+    for (int i = 0; i < output.length(); i++) {
+        if (output[i] >= 48 && output[i] <= 57 && flags[output[i] - 48] == false)
+            cout << output[i];
+        else if (output[i] >= 65 && output[i] <= 90 && flags[output[i] - 55] == false && !flag)
+            cout << output[i];
+        else if (output[i] >= 97 && output[i] <= 122 && flags[output[i] - 87] == false)
+            cout << output[i];
+        else if (output[i] == 95 && flags[36] == false)
+            cout << output[i];
+        else if (output[i] == 44 && flags[37] == false)
+            cout << output[i];
+        else if (output[i] == 46 && flags[38] == false)
+            cout << output[i];
+        else if (output[i] == 45 && flags[39] == false)
+            cout << output[i];
+        else if (output[i] == 43 && flags[40] == false)
+            cout << output[i];
+    }
+    cout << endl;
+}
+
+int main(){
+    char bad[41];
+    string output;
+    cin.getline(bad,41);
+    cin >> output;
+    for (int i = 0; bad[i]!='\0'; i++) {
+        if (bad[i] >= 48 && bad[i] <= 57)
+            flags[bad[i] - 48] = true;
+        else if (bad[i] >= 65 && bad[i] <= 90)
+            flags[bad[i] - 55] = true;
+        else if (bad[i] >= 97 && bad[i] <= 122)
+            flags[bad[i] - 87] = true;
+        else if (bad[i] == 95)
+            flags[36] = true;
+        else if (bad[i] == 44)
+            flags[37] = true;
+        else if (bad[i] == 46)
+            flags[38] = true;
+        else if (bad[i] == 45)
+            flags[39] = true;
+        else if (bad[i] == 43) {
+            flag = true;
+            flags[40] = true;
+        }
+    }
+    judge(output);
+}
+又拿c++写一遍。。。
