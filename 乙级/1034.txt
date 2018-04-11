@@ -1,0 +1,186 @@
+1034. 有理数四则运算(20)
+
+时间限制
+200 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+本题要求编写程序，计算2个有理数的和、差、积、商。
+
+输入格式：
+
+输入在一行中按照“a1/b1 a2/b2”的格式给出两个分数形式的有理数，其中分子和分母全是整型范围内的整数，负号只可能出现在分子前，分母不为0。
+
+输出格式：
+
+分别在4行中按照“有理数1 运算符 有理数2 = 结果”的格式顺序输出2个有理数的和、差、积、商。注意输出的每个有理数必须是该有理数的最简形式“k a/b”，其中k是整数部分，a/b是最简分数部分；若为负数，则须加括号；若除法分母为0，则输出“Inf”。题目保证正确的输出中没有超过整型范围的整数。
+
+输入样例1：
+2/3 -4/2
+输出样例1：
+2/3 + (-2) = (-1 1/3)
+2/3 - (-2) = 2 2/3
+2/3 * (-2) = (-1 1/3)
+2/3 / (-2) = (-1/3)
+输入样例2：
+5/3 0/6
+输出样例2：
+1 2/3 + 0 = 1 2/3
+1 2/3 - 0 = 1 2/3
+1 2/3 * 0 = 0
+1 2/3 / 0 = Inf
+
+只通过了一个用例。。。其余全部超时
+我100多行的代码啊。。。
+//Create by Caijie.Senior student of BJTU
+import java.lang.*;
+import java.io.*;
+
+class Num {
+    public int fenzi;
+    public int fenmu;
+    public int you;
+
+    public Num(int fenzi, int fenmu) {
+        if (Math.abs(fenzi) >= fenmu) {
+            this.you = fenzi / fenmu;
+            this.fenzi = fenzi - you * fenmu;
+            this.fenmu = fenmu;
+        } else {
+            this.fenmu = fenmu;
+            this.fenzi = fenzi;
+            this.you = 0;
+        }
+    }
+
+    public String getresult() {
+        if (fenzi != 0) {
+            if (fenzi > 0) {
+                if (you == 0)
+                    return fenzi + "/" + fenmu + "";
+                else
+                    return you + " " + fenzi + "/" + fenmu;
+            } else {
+                if (you == 0)
+                    return "(-" + fenzi + "/" + fenmu + ")";
+                else
+                    return "(-" + you + " " + fenzi + "/" + fenmu + ")";
+            }
+        } else {
+            if (you < 0)
+                return "(" + you + ")";
+            else
+                return you + "";
+        }
+    }
+}
+
+public class Main {
+    public static int get_gcd(int n1, int n2) {
+        int gcd = 0;
+        if (n1 < n2) {
+            n1 = n1 + n2;
+            n2 = n1 - n2;
+            n1 = n1 - n2;
+        }
+
+        if (n1 % n2 == 0) {
+            gcd = n2;
+        }
+        while (n1 % n2 > 0) {
+            n1 = n1 % n2;
+            if (n1 < n2) {
+                n1 = n1 + n2;
+                n2 = n1 - n2;
+                n1 = n1 - n2;
+            }
+            if (n1 % n2 == 0) {
+                gcd = n2;
+            }
+        }
+        return gcd;
+    }
+
+    public static int get_lcm(int n1, int n2) {
+        return n1 * n2 / get_gcd(n1, n2);
+    }
+
+    public static String add(Num a1, Num a2) {
+        int lcm = get_lcm(a1.fenmu, a2.fenmu);
+        int last_fenzi = (a1.fenzi + a1.you * a1.fenmu) * lcm / a1.fenmu + (a2.fenzi + a2.you * a2.fenmu) * lcm / a2.fenmu;
+        int you = Math.abs(last_fenzi) / lcm;
+        last_fenzi = last_fenzi - last_fenzi / lcm * lcm;
+        int gcd = Math.abs(get_gcd(last_fenzi, lcm));
+        if (you == 0)
+            return last_fenzi / gcd + "/" + lcm / gcd;
+        else if (last_fenzi < 0)
+            return "(-" + you + " " + Math.abs(last_fenzi) / gcd + "/" + lcm / gcd + ")";
+        else
+            return you + " " + last_fenzi / gcd + "/" + lcm / gcd;
+
+    }
+
+    public static String sub(Num a1, Num a2) {
+        int lcm = get_lcm(a1.fenmu, a2.fenmu);
+        int last_fenzi = (a1.fenzi + a1.you * a1.fenmu) * lcm / a1.fenmu - (a2.fenzi + a2.you * a2.fenmu) * lcm / a2.fenmu;
+        int you = Math.abs(last_fenzi) / lcm;
+        last_fenzi = last_fenzi - last_fenzi / lcm * lcm;
+        int gcd = Math.abs(get_gcd(last_fenzi, lcm));
+        if (you == 0)
+            return last_fenzi / gcd + "/" + lcm / gcd;
+        else if (last_fenzi < 0)
+            return "(-" + you + " " + Math.abs(last_fenzi) / gcd + "/" + lcm / gcd + ")";
+        else
+            return you + " " + last_fenzi / gcd + "/" + lcm / gcd;
+    }
+
+    public static String mul(Num a1, Num a2) {
+        int last_fenzi = (a1.fenzi + a1.you * a1.fenmu) * (a2.fenzi + a2.you * a2.fenmu);
+        int last_fenmu = a1.fenmu * a2.fenmu;
+        int you = last_fenzi / last_fenmu;
+        last_fenzi = last_fenzi - you * last_fenmu;
+        if (last_fenzi == 0)
+            return "0";
+        int gcd = Math.abs(get_gcd(last_fenzi, last_fenmu));
+        if (you == 0)
+            if (last_fenzi >= 0)
+                return last_fenzi / gcd + "/" + last_fenmu / gcd;
+            else
+                return "(" + last_fenzi / gcd + "/" + last_fenmu / gcd + ")";
+        else if (last_fenzi >= 0)
+            return you + " " + last_fenzi / gcd + "/" + last_fenmu / gcd;
+        else
+            return "(" + you + " " + Math.abs(last_fenzi / gcd) + "/" + last_fenmu / gcd + ")";
+
+    }
+
+    public static String div(Num a1, Num a2) {
+        if (a2.fenzi + a2.you * a2.fenmu < 0)
+            return mul(a1, new Num(-a2.fenmu, Math.abs(a2.fenzi + a2.you * a2.fenmu)));
+        if (a2.fenzi + a2.you * a2.fenmu == 0)
+            return "Inf";
+        else
+            return mul(a1, new Num(a2.fenmu, a2.fenzi + a2.you * a2.fenmu));
+    }
+
+    public static void output(Num a1, Num a2) {
+        System.out.println(a1.getresult() + " + " + a2.getresult() + " = " + add(a1, a2));
+        System.out.println(a1.getresult() + " - " + a2.getresult() + " = " + sub(a1, a2));
+        System.out.println(a1.getresult() + " * " + a2.getresult() + " = " + mul(a1, a2));
+        System.out.println(a1.getresult() + " / " + a2.getresult() + " = " + div(a1, a2));
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line = bufferedReader.readLine();
+        String[] nums = line.split(" |/");
+        Num num1 = new Num(Integer.parseInt(nums[0]), Integer.parseInt(nums[1]));
+        Num num2 = new Num(Integer.parseInt(nums[2]), Integer.parseInt(nums[3]));
+        output(num1, num2);
+    }
+}
