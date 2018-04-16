@@ -1,0 +1,88 @@
+1038. 统计同成绩学生(20)
+
+时间限制
+250 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+本题要求读入N名学生的成绩，将获得某一给定分数的学生人数输出。
+
+输入格式：
+
+输入在第1行给出不超过105的正整数N，即学生总人数。随后1行给出N名学生的百分制整数成绩，中间以空格分隔。最后1行给出要查询的分数个数K（不超过N的正整数），随后是K个分数，中间以空格分隔。
+
+输出格式：
+
+在一行中按查询顺序给出得分等于指定分数的学生人数，中间以空格分隔，但行末不得有多余空格。
+
+输入样例：
+10
+60 75 90 55 75 99 82 90 75 50
+3 75 90 88
+输出样例：
+3 2 0
+
+
+# Created By Caijie,Senior student of BJTU
+num = input()
+line = input()
+list = line.split(" ")
+list_num = []
+
+list2 = []
+line2 = input()
+list2 = line2.split(" ")
+list2_num = []
+
+list_num = [int(x) for x in list]
+list2_num = [int(y) for y in list2]
+
+len = list2_num[0]
+list2_num.remove(list2_num[0])
+
+result = []
+for i in list2_num:
+    count = 0
+    for j in list_num:
+        if i == j:
+            count += 1;
+    result.append(count)
+
+for k in result[0:-1]:
+    print(str(k)+" ",end="")
+print(result[-1])
+
+Python在最后一个例子也超时了
+
+只能换c++ hash的方法做的
+#include<iostream>
+using namespace std;
+int main(){
+    int num;
+    int array[101];
+    for(int i = 0;i<101;i++)
+        array[i] = 0;
+    cin >> num;
+    int index;
+    for(int i = 0;i<num;i++)
+    {
+        cin >> index;
+        array[index]++;
+    }
+    int result_count;
+    cin >> result_count;
+    for(int i = 0;i<result_count-1;i++)
+    {
+        int ind;
+        cin >> ind;
+        cout << array[ind] << " ";
+    }
+    int last;
+    cin >> last;
+    cout << array[last];
+}
