@@ -1,0 +1,55 @@
+1043. 输出PATest(20)
+
+时间限制
+400 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+给定一个长度不超过10000的、仅由英文字母构成的字符串。请将字符重新调整顺序，按“PATestPATest....”这样的顺序输出，并忽略其它字符。当然，六种字符的个数不一定是一样多的，若某种字符已经输出完，则余下的字符仍按PATest的顺序打印，直到所有字符都被输出。
+
+输入格式：
+
+输入在一行中给出一个长度不超过10000的、仅由英文字母构成的非空字符串。
+
+输出格式：
+
+在一行中按题目要求输出排序后的字符串。题目保证输出非空。
+
+输入样例：
+redlesPayBestPATTopTeePHPereatitAPPT
+输出样例：
+PATestPATestPTetPTePePee
+
+# Created By Caijie,Senior student of BJTU
+if __name__ == "__main__":
+    line = input()
+    max = 0
+    list = [0 for i in range(6)]
+    dict = {0:"P",1:"A",2:"T",3:"e",4:"s",5:"t"}
+    for j in line:
+        if j== "P":
+            list[0] += 1
+        elif j == "A":
+            list[1] += 1
+        elif j=="T":
+            list[2] += 1
+        elif j == "e":
+            list[3] += 1
+        elif j == "s":
+            list[4] += 1
+        elif j == "t":
+            list[5] += 1
+    for k in list:
+        if k > max:
+            max = k
+    for m in range(max):
+        for n in range(6):
+            if list[n]==0:
+                continue
+            print(dict[n],end = "")
+            list[n] -= 1
