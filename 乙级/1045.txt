@@ -89,3 +89,32 @@ int main() {
 
 到网上看看别人写的再写一次
 
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+int a[100000], b[100000], c[100000];
+
+int main() {
+    int max = 0, cnt = 0;
+    int num;
+    cin >> num;
+    for (int i = 0; i < num; i++) {
+        cin >> a[i];
+        b[i] = a[i];
+    }
+    sort(a, a + num);
+    for (int j = 0; j < num; j++) {
+        if (a[j] == b[j] && a[j] > max)
+            c[cnt++] = a[j];
+        if (b[j] > max)
+            max = b[j];
+    }
+    cout << cnt << endl;
+    for (int k = 0; k < cnt; k++) {
+        if (k != 0)
+            cout << " ";
+        cout << c[k];
+    }
+    cout << endl;
+}
