@@ -1,4 +1,4 @@
-1051. 复数乘法 (15)
+1052. 卖个萌 (20)
 
 时间限制
 400 ms
@@ -10,56 +10,100 @@
 Standard
 作者
 CHEN, Yue
-复数可以写成(A + Bi)的常规形式，其中A是实部，B是虚部，i是虚数单位，满足i2 = -1；也可以写成极坐标下的指数形式(R*e(Pi))，其中R是复数模，P是辐角，i是虚数单位，其等价于三角形式 R(cos(P) + isin(P))。
+萌萌哒表情符号通常由“手”、“眼”、“口”三个主要部分组成。简单起见，我们假设一个表情符号是按下列格式输出的：
 
-现给定两个复数的R和P，要求输出两数乘积的常规形式。
+[左手]([左眼][口][右眼])[右手]
+现给出可选用的符号集合，请你按用户的要求输出表情。
 
 输入格式：
 
-输入在一行中依次给出两个复数的R1, P1, R2, P2，数字间以空格分隔。
+输入首先在前三行顺序对应给出手、眼、口的可选符号集。每个符号括在一对方括号[]内。题目保证每个集合都至少有一个符号，并不超过10个符号；每个符号包含1到4个非空字符。
+
+之后一行给出一个正整数K，为用户请求的个数。随后K行，每行给出一个用户的符号选择，顺序为左手、左眼、口、右眼、右手——这里只给出符号在相应集合中的序号（从1开始），数字间以空格分隔。
 
 输出格式：
 
-在一行中按照“A+Bi”的格式输出两数乘积的常规形式，实部和虚部均保留2位小数。注意：如果B是负数，则应该写成“A-|B|i”的形式。
+对每个用户请求，在一行中输出生成的表情。若用户选择的序号不存在，则输出“Are you kidding me? @\/@”。
 
 输入样例：
-2.3 3.5 5.2 0.4
+[╮][╭][o][~\][/~]  [<][>]
+ [╯][╰][^][-][=][>][<][@][⊙]
+[Д][▽][_][ε][^]  ...
+4
+1 1 2 2 2
+6 8 1 5 5
+3 3 4 3 3
+2 10 3 9 3
 输出样例：
--8.68-8.23i
+╮(╯▽╰)╭
+<(@Д=)/~
+o(^ε^)o
+Are you kidding me? @\/@
 
-//Create by Caijie.Senior student of BJTU
+
+"最后一行字母送个PAT题库"
+java就是有两个例子过不去，卡了一下午
+
+
+
+import java.util.*;
 import java.lang.*;
 import java.io.*;
 
 public class Main {
-    public static double act(double num1, double num2) {
-        return num1 * Math.cos(num2);
-    }
-
-    public static double vis(double num1, double num2) {
-        return num1 * Math.sin(num2);
-    }
-
     public static void main(String[] args) throws IOException {
-        BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
-        String line = buff.readLine();
-        String[] nums = line.split(" ");
-        double[] num = new double[4];
-        num[0] = act(Double.parseDouble(nums[0]), Double.parseDouble(nums[1]));
-        num[1] = vis(Double.parseDouble(nums[0]), Double.parseDouble(nums[1]));
-        num[2] = act(Double.parseDouble(nums[2]), Double.parseDouble(nums[3]));
-        num[3] = vis(Double.parseDouble(nums[2]), Double.parseDouble(nums[3]));
-        double a = num[0] * num[2] - num[1] * num[3];
-        double b = num[0] * num[3] + num[1] * num[2];
-        if (a < 0 && a > -0.005)
-            System.out.print("0.00");
-        else
-            System.out.print(String.format("%.2f",a));
-        if (b < 0 && b > -0.005)
-            System.out.print("+0.00i");
-        else if (b >= 0)
-            System.out.print("+" + String.format("%.2f", b) + "i");
-        else
-            System.out.print(String.format("%.2f", b) + "i");
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line_left = bufferedReader.readLine();
+        line_left = line_left.substring(line_left.indexOf(91)+1,line_left.lastIndexOf(93));
+        String[] hands = line_left.split("](\\s)*\\[");
+
+        String line_eye = bufferedReader.readLine();
+        line_eye = line_eye.substring(line_eye.indexOf(91)+1,line_eye.lastIndexOf(93));
+        String[] eyes = line_eye.split("](\\s)*\\[");
+
+        String line_mouth = bufferedReader.readLine();
+        line_mouth = line_mouth.substring(line_mouth.indexOf(91)+1,line_mouth.lastIndexOf(93));
+        String[] mouths = line_mouth.split("](\\s)*\\[");
+
+        int num = Integer.parseInt(bufferedReader.readLine());
+        for (int i = 0; i < num; i++) {
+            String signs = bufferedReader.readLine();
+            String[] sign = signs.split(" ");
+            if (Integer.parseInt(sign[0]) > hands.length || Integer.parseInt(sign[0]) < 1) {
+                System.out.println("Are you kidding me? @\\/@");
+                continue;
+            }
+            if (Integer.parseInt(sign[1]) > eyes.length || Integer.parseInt(sign[1]) < 1) {
+                System.out.println("Are you kidding me? @\\/@");
+                continue;
+            }
+            if (Integer.parseInt(sign[2]) > mouths.length || Integer.parseInt(sign[2]) < 1) {
+                System.out.println("Are you kidding me? @\\/@");
+                continue;
+            }
+            if (Integer.parseInt(sign[3]) > eyes.length || Integer.parseInt(sign[3]) < 1) {
+                System.out.println("Are you kidding me? @\\/@");
+                continue;
+            }
+            if (Integer.parseInt(sign[4]) > hands.length || Integer.parseInt(sign[4]) < 1) {
+                System.out.println("Are you kidding me? @\\/@");
+                continue;
+            }
+            String left_hand = hands[Integer.parseInt(sign[0]) - 1];
+            System.out.print(left_hand+"(");
+
+            String left_eye = eyes[Integer.parseInt(sign[1]) - 1];
+            System.out.print(left_eye);
+
+            String mouth = mouths[Integer.parseInt(sign[2]) - 1];
+            System.out.print(mouth);
+
+            String right_eye = eyes[Integer.parseInt(sign[3]) - 1];
+            System.out.print(right_eye+")");
+
+            String right_hand = hands[Integer.parseInt(sign[4]) - 1];
+            System.out.println(right_hand);
+
+        }
     }
 }
