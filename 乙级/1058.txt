@@ -1,0 +1,129 @@
+1058. 选择题(20)
+
+时间限制
+300 ms
+内存限制
+65536 kB
+代码长度限制
+8000 B
+判题程序
+Standard
+作者
+CHEN, Yue
+批改多选题是比较麻烦的事情，本题就请你写个程序帮助老师批改多选题，并且指出哪道题错的人最多。
+
+输入格式：
+
+输入在第一行给出两个正整数N（<=1000）和M（<=100），分别是学生人数和多选题的个数。随后M行，每行顺次给出一道题的满分值（不超过5的正整数）、选项个数（不少于2且不超过5的正整数）、正确选项个数（不超过选项个数的正整数）、所有正确选项。注意每题的选项从小写英文字母a开始顺次排列。各项间以1个空格分隔。最后N行，每行给出一个学生的答题情况，其每题答案格式为“(选中的选项个数 选项1 ……)”，按题目顺序给出。注意：题目保证学生的答题情况是合法的，即不存在选中的选项数超过实际选项数的情况。
+
+输出格式：
+
+按照输入的顺序给出每个学生的得分，每个分数占一行。注意判题时只有选择全部正确才能得到该题的分数。最后一行输出错得最多的题目的错误次数和编号（题目按照输入的顺序从1开始编号）。如果有并列，则按编号递增顺序输出。数字间用空格分隔，行首尾不得有多余空格。如果所有题目都没有人错，则在最后一行输出“Too simple”。
+
+输入样例：
+3 4 
+3 4 2 a c
+2 5 1 b
+5 3 2 b c
+1 5 4 a b d e
+(2 a c) (2 b d) (2 a c) (3 a b e)
+(2 a c) (1 b) (2 a b) (4 a b d e)
+(2 b d) (1 e) (2 b c) (4 a b c d)
+输出样例：
+3
+6
+5
+2 2 3 4
+
+//Created By Caijie,Senior Student of BJTU
+#include <iostream>
+
+using namespace std;
+
+class Subject {
+public:
+    int score_;
+    int choice_num_;
+    int right_choice_num_;
+    string answers_;
+    int error;
+
+    Subject(int score, int choice_num_, int right_choice_num_);
+
+    void set_answers(char answers[], int num) {
+        for (int i = 0; i < num; i++)
+            answers_[i] = answers[i];
+    }
+};
+
+Subject::Subject(int score, int choice_num, int right_choice_num) {
+    score_ = score;
+    choice_num_ = choice_num;
+    right_choice_num_ = right_choice_num;
+}
+
+int main() {
+    int num_student;
+    int num_subject;
+    int max = 0;
+    cin >> num_student;
+    cin >> num_subject;
+    Subject *list = (Subject *) malloc(sizeof(Subject) * num_subject);
+    for (int i = 0; i < num_subject; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        list[i] = Subject(a, b, c);
+        char answers[c];
+        for (int j = 0; j < c; j++) {
+            char ans;
+            cin >> ans;
+            if (ans != ' ')
+                answers[j] = ans;
+        }
+        list[i].set_answers(answers, c);
+    }
+    for (int k = 0; k < num_student; k++) {
+        int score = 0;
+        for (int m = 0; m < num_subject; m++) {
+            string line = "";
+            while (1) {
+                char next = getchar();
+                if (next == ')')
+                    break;
+                if (next == '(' || next == ' ' || next == '\n')
+                    continue;
+                line += next;
+            }
+            if (line[0] - 48 != list[m].right_choice_num_) {
+                list[m].error++;
+                if (list[m].error > max)
+                    max = list[m].error;
+                continue;
+            }
+            for (int n = 1; n < line.size(); n++) {
+                if (line[n] == list[m].answers_[n - 1]) {
+                    if (n == line.size() - 1)
+                        score += list[m].score_;
+                    continue;
+                } else {
+                    list[m].error++;
+                    if (list[m].error > max)
+                        max = list[m].error;
+                    break;
+                }
+            }
+        }
+        if (score == 0)
+            cout << "Too simple" << endl;
+        else
+            cout << score << endl;
+    }
+    cout << max << " ";
+    for (int o = 0; o < num_subject; o++) {
+        if (list[o].error == max && o != num_subject - 1)
+            cout << o + 1 << " ";
+        else if (list[o].error == max)
+            cout << o + 1;
+    }
+}
+//段错误 难受
