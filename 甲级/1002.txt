@@ -1,0 +1,56 @@
+1002 A+B for Polynomials (25)（25 分）
+This time, you are supposed to find A+B where A and B are two polynomials.
+
+Input
+
+Each input file contains one test case. Each case occupies 2 lines, and each line contains the information of a polynomial: K N1 a~N1~ N2 a~N2~ ... NK a~NK~, where K is the number of nonzero terms in the polynomial, Ni and a~Ni~ (i=1, 2, ..., K) are the exponents and coefficients, respectively. It is given that 1 <= K <= 10，0 <= NK < ... < N2 < N1 <=1000.
+
+Output
+
+For each test case you should output the sum of A and B in one line, with the same format as the input. Notice that there must be NO extra space at the end of each line. Please be accurate to 1 decimal place.
+
+Sample Input
+
+2 1 2.4 0 3.2
+2 2 1.5 1 0.5
+Sample Output
+
+3 2 1.5 1 2.9 0 3.2
+
+//Create by Caijie.Senior student of BJTU
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class MapKeyComparator implements Comparator<Integer> {
+
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        return o2 - o1;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line1 = bufferedReader.readLine();
+        String line2 = bufferedReader.readLine();
+        String msg1[] = line1.split(" ");
+        String msg2[] = line2.split(" ");
+        Map<Integer, Double> list = new TreeMap<Integer, Double>(new MapKeyComparator());
+        for (int i = 0; i < Integer.parseInt(msg1[0]); i++)
+            list.put(Integer.parseInt(msg1[i * 2 + 1]), Double.parseDouble(msg1[i * 2 + 2]));
+        for (int i = 0; i < Integer.parseInt(msg2[0]); i++) {
+            if (list.get(Integer.parseInt(msg2[i * 2 + 1])) == null && Double.parseDouble(msg2[i * 2 + 2]) != 0.0)
+                list.put(Integer.parseInt(msg2[i * 2 + 1]), Double.parseDouble(msg2[i * 2 + 2]));
+            else if (Double.parseDouble(msg2[i * 2 + 2]) + list.get(Integer.parseInt(msg2[i * 2 + 1])) != 0.0)
+                list.put(Integer.parseInt(msg2[i * 2 + 1]), Double.parseDouble(msg2[i * 2 + 2]) + list.get(Integer.parseInt(msg2[i * 2 + 1])));
+            else
+                list.remove(Integer.parseInt(msg2[i * 2 + 1]));
+        }
+        System.out.print(list.size());
+        for (Map.Entry<Integer, Double> entry : list.entrySet()) {
+            System.out.printf(" %d %.01f", entry.getKey(), entry.getValue());
+        }
+    }
+}
