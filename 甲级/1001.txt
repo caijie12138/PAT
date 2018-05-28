@@ -1,0 +1,41 @@
+1001 A+B Format (20)（20 分）
+Calculate a + b and output the sum in standard format -- that is, the digits must be separated into groups of three by commas (unless there are less than four digits).
+
+Input
+
+Each input file contains one test case. Each case contains a pair of integers a and b where -1000000 <= a, b <= 1000000. The numbers are separated by a space.
+
+Output
+
+For each test case, you should output the sum of a and b in one line. The sum must be written in the standard format.
+
+Sample Input
+
+-1000000 9
+Sample Output
+
+-999,991
+
+//Create by Caijie.Senior student of BJTU
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+public class Main{
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line = bufferedReader.readLine();
+        String[] nums = line.split(" ");
+        int result = Integer.parseInt(nums[0])+Integer.parseInt(nums[1]);
+        String res = String.valueOf(result);
+        StringBuilder s = new StringBuilder();
+        for(int i = res.length()-1,j=0;i>=0;i--){
+            s.append(res.charAt(i));
+            j++;
+            if(i==0)
+                break;
+            if(j%3==0 && res.charAt(i-1)!='-')
+                s.append(",");
+        }
+        System.out.println(s.reverse());
+    }
+}
