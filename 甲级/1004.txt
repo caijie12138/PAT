@@ -1,0 +1,81 @@
+1004 Counting Leaves (30)（30 分）
+A family hierarchy is usually presented by a pedigree tree. Your job is to count those family members who have no child.
+
+Input
+
+Each input file contains one test case. Each case starts with a line containing 0 < N < 100, the number of nodes in a tree, and M (< N), the number of non-leaf nodes. Then M lines follow, each in the format:
+
+ID K ID[1] ID[2] ... ID[K]
+where ID is a two-digit number representing a given non-leaf node, K is the number of its children, followed by a sequence of two-digit ID's of its children. For the sake of simplicity, let us fix the root ID to be 01.
+
+Output
+
+For each test case, you are supposed to count those family members who have no child for every seniority level starting from the root. The numbers must be printed in a line, separated by a space, and there must be no extra space at the end of each line.
+
+The sample case represents a tree with only 2 nodes, where 01 is the root and 02 is its only child. Hence on the root 01 level, there is 0 leaf node; and on the next level, there is 1 leaf node. Then we should output "0 1" in a line.
+
+Sample Input
+
+2 1
+01 1 02
+Sample Output
+
+0 1
+
+//对了三个测试 实在想不出哪里有错了 有大神帮忙看看的话感激不尽
+////Create by Caijie.Senior student of BJTU
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class Main {
+    static boolean non_leaf[];
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String line = bufferedReader.readLine();
+        String nums[] = line.split(" ");
+        int node_all = Integer.parseInt(nums[0]);
+        int non_leafs = Integer.parseInt(nums[1]);
+        if (node_all == 1) {
+            System.out.println("1");
+            return;
+        }
+        non_leaf = new boolean[node_all + 1];
+        Map<Integer, Integer> node_level = new TreeMap<>();
+        for (int i = 0; i < non_leafs; i++) {
+            String l = bufferedReader.readLine();
+            String ine[] = l.split(" ");
+            int index = Integer.parseInt(ine[0]);
+            int num = Integer.parseInt(ine[1]);
+            int father;
+            if (i == 0) {
+                father = 1;
+                node_level.put(index, 1);
+                non_leaf[index] = true;
+            } else {
+                father = node_level.get(index);
+                non_leaf[index] = true;
+            }
+            for (int j = 2; j < 2 + num; j++)
+                node_level.put(Integer.parseInt(ine[j]), father + 1);
+        }
+        List<Map.Entry<Integer, Integer>> entryArrayList = new ArrayList<>(node_level.entrySet());
+        Collections.sort(entryArrayList, Comparator.comparing(Map.Entry::getValue));
+        int count = 0;
+        int level = 1;
+        for (Map.Entry<Integer, Integer> entry : entryArrayList) {
+            if (entry.getValue() == level && non_leaf[entry.getKey()] == false)
+                count++;
+            else if (entry.getValue() != level) {
+                System.out.print(count + " ");
+                level = entry.getValue();
+                if (non_leaf[entry.getKey()] == false)
+                    count = 1;
+                else
+                    count = 0;
+            }
+        }
+        System.out.println(count);
+    }
+}
