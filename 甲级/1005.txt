@@ -1,0 +1,41 @@
+1005 Spell It Right (20)（20 分）
+Given a non-negative integer N, your task is to compute the sum of all the digits of N, and output every digit of the sum in English.
+
+Input Specification:
+
+Each input file contains one test case. Each case occupies one line which contains an N (<= 10^100^).
+
+Output Specification:
+
+For each test case, output in one line the digits of the sum in English words. There must be one space between two consecutive words, but no extra space at the end of a line.
+
+Sample Input:
+
+12345
+Sample Output:
+
+one five
+
+//Created By Caijie,Senior Student of BJTU 偶尔出两个简单题来助助兴？
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+int main() {
+    char num[102];
+    cin.getline(num, 102);
+    int sum = 0;
+    for (int i = 0; num[i] != '\0'; i++) {
+        sum += num[i] - 48;
+    }
+    string result;
+    stringstream strs;
+    strs << sum;
+    strs >> result;
+    string nums[] = {"zero","one","two","three","four","five",
+                     "six","seven", "eight","nine"};
+    for(int j = 0;j<result.size()-1;j++)
+        cout << nums[result.at(j)-48] << " ";
+    cout << nums[result.at(result.size()-1)-48];
+}
