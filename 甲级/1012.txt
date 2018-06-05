@@ -1,0 +1,243 @@
+1012 The Best Rank (25)（25 分）
+To evaluate the performance of our first year CS majored students, we consider their grades of three courses only: C - C Programming Language, M - Mathematics (Calculus or Linear Algebra), and E - English. At the mean time, we encourage students by emphasizing on their best ranks -- that is, among the four ranks with respect to the three courses and the average grade, we print the best rank for each student.
+
+For example, The grades of C, M, E and A - Average of 4 students are given as the following:
+
+StudentID  C  M  E  A
+310101     98 85 88 90
+310102     70 95 88 84
+310103     82 87 94 88
+310104     91 91 91 91
+Then the best ranks for all the students are No.1 since the 1st one has done the best in C Programming Language, while the 2nd one in Mathematics, the 3rd one in English, and the last one in average.
+
+Input
+
+Each input file contains one test case. Each case starts with a line containing 2 numbers N and M (<=2000), which are the total number of students, and the number of students who would check their ranks, respectively. Then N lines follow, each contains a student ID which is a string of 6 digits, followed by the three integer grades (in the range of [0, 100]) of that student in the order of C, M and E. Then there are M lines, each containing a student ID.
+
+Output
+
+For each of the M students, print in one line the best rank for him/her, and the symbol of the corresponding rank, separated by a space.
+
+The priorities of the ranking methods are ordered as A > C > M > E. Hence if there are two or more ways for a student to obtain the same best rank, output the one with the highest priority.
+
+If a student is not on the grading list, simply output "N/A".
+
+Sample Input
+
+5 6
+310101 98 85 88
+310102 70 95 88
+310103 82 87 94
+310104 91 91 91
+310105 85 90 90
+310101
+310102
+310103
+310104
+310105
+999999
+Sample Output
+
+1 C
+1 M
+1 E
+1 A
+3 A
+N/A
+
+////Create by Caijie.Senior student of BJTU
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class CLanguage implements Comparable {
+    String name;
+    int score;
+
+    public CLanguage(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        CLanguage c = (CLanguage) o;
+        if (c.score == this.score)
+            return 1;
+        return c.score - this.score;
+    }
+}
+
+class Mathematics implements Comparable {
+    String name;
+    int score;
+
+    public Mathematics(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Mathematics m = (Mathematics) o;
+        if (m.score == this.score)
+            return 1;
+        return m.score - this.score;
+    }
+}
+
+class English implements Comparable {
+    String name;
+    int score;
+
+    public English(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        English e = (English) o;
+        if (e.score == this.score)
+            return 1;
+        return e.score - this.score;
+    }
+}
+
+class Average implements Comparable {
+    String name;
+    int score;
+
+    public Average(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Average a = (Average) o;
+        if (a.score == this.score)
+            return 1;
+        return a.score - this.score;
+    }
+}
+
+class SubjectRank {
+    String sub;
+    int rank;
+
+    public SubjectRank(String sub, int rank) {
+        this.sub = sub;
+        this.rank = rank;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufr = new BufferedReader(new InputStreamReader(System.in));
+        String l = bufr.readLine();
+        String ine[] = l.split(" ");
+        int N = Integer.parseInt(ine[0]);
+        int M = Integer.parseInt(ine[1]);
+        Set<CLanguage> cLanguages = new TreeSet<>();
+        Set<Mathematics> mathematics = new TreeSet<>();
+        Set<English> englishes = new TreeSet<>();
+        Set<Average> averages = new TreeSet<>();
+        for (int i = 0; i < N; i++) {
+            String mes = bufr.readLine();
+            String[] sage = mes.split(" ");
+            double score_c = Double.parseDouble(sage[1]);
+            double score_m = Double.parseDouble(sage[2]);
+            double score_e = Double.parseDouble(sage[3]);
+            cLanguages.add(new CLanguage(sage[0], Integer.parseInt(sage[1])));
+            mathematics.add(new Mathematics(sage[0], Integer.parseInt(sage[2])));
+            englishes.add(new English(sage[0], Integer.parseInt(sage[3])));
+            averages.add(new Average(sage[0], (int) ((score_c + score_m + score_e) / 3 + 0.5)));
+        }
+        Map<String, SubjectRank> lists = new HashMap<>();
+        Iterator<Average> iterator_top = averages.iterator();
+        Iterator<CLanguage> iterator1 = cLanguages.iterator();
+        Iterator<Mathematics> iterator2 = mathematics.iterator();
+        Iterator<English> iterator3 = englishes.iterator();
+        int rank_top = 0;
+        int score_before = -1;
+        int rank_now;
+        while (iterator_top.hasNext()) {
+            Average a = iterator_top.next();
+            if (a.score == score_before) {
+                lists.put(a.name, new SubjectRank("A", rank_top));
+                rank_top++;
+                continue;
+            } else {
+                rank_top++;
+                lists.put(a.name, new SubjectRank("A", rank_top));
+            }
+            score_before = a.score;
+        }
+        score_before = -1;
+        rank_now = 1;
+        while (iterator1.hasNext()) {
+            CLanguage c = iterator1.next();
+            if (lists.get(c.name).rank > rank_now) {
+                if (c.score == score_before) {
+                    lists.put(c.name, new SubjectRank("C", rank_now));
+                    continue;
+                } else if (c.score != score_before) {
+                    if (score_before != -1)
+                        rank_now++;
+                    if (lists.get(c.name).rank > rank_now)
+                        lists.put(c.name, new SubjectRank("C", rank_now));
+                }
+                score_before = c.score;
+            } else if (c.score != score_before)
+                rank_now++;
+        }
+        score_before = -1;
+        rank_now = 1;
+        while (iterator2.hasNext()) {
+            Mathematics m = iterator2.next();
+            if (lists.get(m.name).rank > rank_now) {
+                if (m.score == score_before) {
+                    lists.put(m.name, new SubjectRank("M", rank_now));
+                    continue;
+                } else if (m.score != score_before) {
+                    if (score_before != -1)
+                        rank_now++;
+                    if (lists.get(m.name).rank > rank_now)
+                        lists.put(m.name, new SubjectRank("M", rank_now));
+                }
+                score_before = m.score;
+            } else if (m.score != score_before)
+                rank_now++;
+        }
+        score_before = -1;
+        rank_now = 1;
+        ;
+        while (iterator3.hasNext()) {
+            English e = iterator3.next();
+            if (lists.get(e.name).rank > rank_now) {
+                if (e.score == score_before) {
+                    lists.put(e.name, new SubjectRank("E", rank_now));
+                    continue;
+                } else if (e.score != score_before) {
+                    if (score_before != -1)
+                        rank_now++;
+                    if (lists.get(e.name).rank > rank_now)
+                        lists.put(e.name, new SubjectRank("E", rank_now));
+                }
+                score_before = e.score;
+            } else if (e.score != score_before)
+                rank_now++;
+
+        }
+        for (int j = 0; j < M; j++) {
+            String id = bufr.readLine();
+            if (lists.get(id) == null) {
+                System.out.println("N/A");
+                continue;
+            }
+            System.out.println(lists.get(id).rank + " " + lists.get(id).sub);
+        }
+    }
+}
