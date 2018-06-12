@@ -1,0 +1,83 @@
+1015 Reversible Primes (20)（20 分）
+A reversible prime in any number system is a prime whose "reverse" in that number system is also a prime. For example in the decimal system 73 is a reversible prime because its reverse 37 is also a prime.
+
+Now given any two positive integers N (< 10^5^) and D (1 < D <= 10), you are supposed to tell if N is a reversible prime with radix D.
+
+Input Specification:
+
+The input file consists of several test cases. Each case occupies a line which contains two integers N and D. The input is finished by a negative N.
+
+Output Specification:
+
+For each test case, print in one line "Yes" if N is a reversible prime with radix D, or "No" if not.
+
+Sample Input:
+
+73 10
+23 2
+23 10
+-2
+Sample Output:
+
+Yes
+Yes
+No
+
+//Create by Caijie.Senior student of BJTU
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class Main {
+    public static int judge(int N) {
+        if (N == 2 || N == 3)
+            return 1;
+        if (N % 6 != 1 && N % 6 != 5)
+            return 0;
+        for (int i = 5; i <= Math.sqrt(N); i += 6)
+            if (N % i == 0 || N % (i + 2) == 0)
+                return 0;
+        return 1;
+    }
+
+    public static StringBuilder reverse(int num, int radix) {
+        StringBuilder result = new StringBuilder();
+        while (num / radix != 0) {
+            result.append(num % radix);
+            num = num / radix;
+        }
+        result.append(num);
+        return result;
+    }
+
+    public static int toten(StringBuilder s,int radix) {
+        int result = 0;
+        String change = s.toString();
+        for (int i = change.length()-1,j = 0; i >= 0; i--) {
+            result += (change.charAt(i)-'0')* Math.pow(radix,j);
+            j++;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            String l = bufferedReader.readLine();
+            if (!l.contains(" ") && Integer.parseInt(l) < 0)
+                break;
+            String ine[] = l.split(" ");
+            if (judge(Integer.parseInt(ine[0])) != 1) {
+                System.out.println("No");
+                continue;
+            }
+            StringBuilder result1 = reverse(Integer.parseInt(ine[0]), Integer.parseInt(ine[1]));
+            int result = toten(result1, Integer.parseInt(ine[1]));
+            int i = judge(result);
+            if (i == 1 && result!=1)
+                System.out.println("Yes");
+            else
+                System.out.println("No");
+        }
+    }
+}
