@@ -28,6 +28,7 @@ Sample Output:
 8.2
 
 //Create by Caijie.Senior student of BJTU
+
 import java.util.*;
 import java.lang.*;
 import java.io.*;
@@ -114,19 +115,30 @@ public class Main {
         while (it.hasNext()) {
             Person p = it.next();
             EndTime e = ((TreeSet<EndTime>) list2).first();
-            sum_wait_time += (e.hour - p.hour) * 3600 + (e.minute - p.minute) * 60 + (e.second - p.second);
-            list2.remove(e);
-            int new_h, new_m,new_s;
-            if (e.minute + p.server_time > 60) {
-                new_h = p.hour + 1;
-                new_m = (e.minute + p.server_time) % 60;
+            if (p.hour > e.hour || (p.hour == e.hour && p.minute > e.minute) || (p.hour == e.hour && p.minute == e.minute && p.minute > e.minute)) {
+                list2.remove(e);
+                if (p.minute + p.server_time > 60) {
+                    p.hour++;
+                    p.minute = (p.minute + p.server_time) % 60;
+                } else
+                    p.minute += p.server_time;
+                list2.add(new EndTime(p.hour, p.minute, p.second));
             } else {
-                new_h = p.hour;
-                new_m = e.minute + p.server_time;
+                sum_wait_time += (e.hour - p.hour) * 3600 + (e.minute - p.minute) * 60 + (e.second - p.second);
+                list2.remove(e);
+                int new_h, new_m, new_s;
+                if (e.minute + p.server_time > 60) {
+                    new_h = p.hour + 1;
+                    new_m = (e.minute + p.server_time) % 60;
+                } else {
+                    new_h = p.hour;
+                    new_m = e.minute + p.server_time;
+                }
+                new_s = e.second;
+                list2.add(new EndTime(new_h, new_m, new_s));
             }
-            new_s = e.second;
-            list2.add(new EndTime(new_h,new_m,new_s));
         }
         System.out.printf("%.1f", sum_wait_time / 60 / count);
     }
 }
+//最坑的地方在于客户晚于空口空闲时间到来的情况
